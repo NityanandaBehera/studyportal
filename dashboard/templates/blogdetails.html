@@ -1,0 +1,9 @@
+{% extends 'base.html' %} {% block content %}{% load embed_video_tags %}
+<div class="col-md-8 offset-md-2">
+  <h1>{{ tut.tutorial_title }}</h1>
+  <p>{{ tut.tutorial_body | linebreaks }}</p>
+  <h3>Here is the video:</h3>
+
+  {% video tut.tutorial_video 'small' %}
+</div>
+{% endblock content %}

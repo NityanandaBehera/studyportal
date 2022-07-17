@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'baton',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'dashboard',
     'crispy_forms',
+    'embed_video',
 ]
 
 MIDDLEWARE = [
@@ -126,4 +128,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATICFILES_DIRS = [
     BASE_DIR, 'static/'
 ]
+MEDIA_URL = 'media/'
 CRISPY_TEMPLATE_PACK = 'bootstrap'
+BATON = {
+    'SITE_HEADER': 'Baton',
+    'SITE_TITLE': 'Baton',
+    'INDEX_TITLE': 'Site administration',
+}

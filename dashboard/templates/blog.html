@@ -1,0 +1,11 @@
+{% extends 'base.html' %} {% block content %}
+<div class="col-md-8 offset-md-2">
+  <h1>Blog Index</h1>
+  <hr />
+  {% for t in tut %}
+  <h2><a href="{% url 'blog_details' t.pk %}">{{ t.tutorial_title}}</a></h2>
+  <p>{{ t.tutorial_body | slice:':400' }}...</p>
+  {% endfor %}
+</div>
+
+{% endblock content %}
