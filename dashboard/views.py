@@ -1,12 +1,13 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from django.http import HttpResponse
 from .models import Homework, Notes
-from .forms import NotesForm, HomeworkForm, TodoForm
+from .forms import NotesForm, HomeworkForm, TodoForm, Dashboard
 from django.contrib import messages
 from django.views import View
 from django.contrib import auth
 from django.contrib.auth.models import User
 from .models import*
+import requests
 
 
 def blog(request):
@@ -159,6 +160,44 @@ def todo(request):
 def todo_delete(request, pk=None):
     Todo.objects.get(id=pk).delete()
     return redirect('todo')
+
+
+def book(request):
+    if request.method == "POST":
+        return _extracted_from_book_3(request)
+    else:
+        form = Dashboard()
+    context = {
+        'form': form
+    }
+    return render(request, 'books.html', context)
+
+
+# TODO Rename this here and in `book`
+def _extracted_from_book_3(request):
+    form = Dashboard(request.POST)
+    text = request.GET.get('text')
+    url = f"https://www.googleapis.com/books/v1/volumes?q={text}"
+    r = requests.get(url)
+    answer = r.json()
+    result_list = []
+    for i in range(10):
+        result_dict = {
+            'title': answer['items'][i]['volumeInfo']['title'],
+            'subtitle': answer['items'][i]['volumeInfo'].get('subtitle'),
+            'description': answer['items'][i]['volumeInfo'].get('description'),
+            'count': answer['items'][i]['volumeInfo'].get('pageCount'),
+            'categories': answer['items'][i]['volumeInfo'].get('categories'),
+            'rating': answer['items'][i]['volumeInfo'].get('pageRating'),
+            'thumbnail': answer['items'][i]['volumeInfo'].get('imageLinks'),
+            'preview': answer['items'][i]['volumeInfo'].get('previewLink'),
+        }
+        result_list.append(result_dict)
+        context = {
+            'form': form,
+            'results': result_list
+        }
+    return render(request, 'books.html', context)
 
 
 # Create your views here.

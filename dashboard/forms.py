@@ -33,3 +33,7 @@ class TodoForm(forms.ModelForm):
     class Meta:
         model = Todo
         fields = ['title', 'is_finished']
+
+
+class Dashboard(forms.Form):
+    title = forms.CharField(max_length=100, label="Enter your search")

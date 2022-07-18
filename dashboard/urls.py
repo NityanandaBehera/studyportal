@@ -13,6 +13,7 @@ urlpatterns = [
     path('homework_delete/<int:pk>', delete_homework, name='homework_delete'),
     path('delete_note/<int:pk>', delete_note, name='delete-note'),
     path('NotesDetails/<int:pk>', NoteDetailsView.as_view(), name='note-detail'),
+    path('books', book, name='book'),
     path('todo', todo, name='todo'),
     path('todo/<int:pk>', todo_delete, name='todo-delete'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
