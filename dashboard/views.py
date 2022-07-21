@@ -8,6 +8,7 @@ from django.contrib import auth
 from django.contrib.auth.models import User
 from .models import*
 import requests
+import wikipedia
 
 
 def blog(request):
@@ -200,4 +201,60 @@ def _extracted_from_book_3(request):
     return render(request, 'books.html', context)
 
 
+def dictionary(request):
+    if request.method == "POST":
+        return _extracted_from_dictionary_3(request)
+    form = Dashboard()
+    context = {
+        'form': form
+    }
+    print
+    return render(request, 'dictionary.html', context)
+
+
+# TODO Rename this here and in `dictionary`
+def _extracted_from_dictionary_3(request):
+    form = Dashboard(request.POST)
+    text = request.GET.get('text')
+    url = f"https://api.dictionaryapi.dev/api/v2/entries/en/{text}"
+    r = requests.get(url)
+    answer = r.json()
+    try:
+        context = _extracted_from_dictionary_9(answer, form, text)
+    except Exception:
+        context = {
+            'form': form,
+            'input': text
+        }
+    return render(request, 'dictionary.html', context)
+
+
+# TODO Rename this here and in `dictionary`
+def _extracted_from_dictionary_9(answer, form, text):
+    phonetics = answer[0]['phonetics'][0]['text']
+    audio = answer[0]['phonetics'][0]['audio']
+    definition = answer[0]['meanings'][0]['definition'][0]['definition']
+    example = answer[0]['meanings'][0]['definition'][0]['example']
+    synonyms = answer[0]['meanings'][0]['definition'][0]['synonyms']
+    return {'form': form, 'input': text, 'phonetics': phonetics, 'audio': audio, 'definition': definition, 'example': example, 'synonyms': synonyms}
 # Create your views here.
+
+
+def wiki(request):
+    if request.method == "POST":
+        form = Dashboard(request.POST)
+        text = request.POST.get('text')
+        search = wikipedia.page('cricket')
+        context = {
+            'form': form,
+            'title': search.title,
+            'link': search.url,
+            'details': search.summary
+        }
+        return render(request, 'wiki.html', context)
+    else:
+        form = Dashboard()
+        context = {
+            'form': form
+        }
+    return render(request, 'wiki.html', context)

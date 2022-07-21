@@ -16,4 +16,6 @@ urlpatterns = [
     path('books', book, name='book'),
     path('todo', todo, name='todo'),
     path('todo/<int:pk>', todo_delete, name='todo-delete'),
+    path('dict', dictionary, name='dict'),
+    path('wiki', wiki, name='wiki'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
